@@ -1,0 +1,47 @@
+#define BLYNK_TEMPLATE_ID "TMPL3x2S0tEvi"
+#define BLYNK_TEMPLATE_NAME "ventilator"
+#define BLYNK_AUTH_TOKEN "9iyOKwYAvQuH4HGHL0DFyCiWo3QzTC-k"
+#define BLYNK_PRINT Serial
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+int sen1 = 0, sen2 = 0, sen3 = 0, sen4 = 0;
+char ssid[] = "ventilator";
+char pass[] = "123456789";
+char red1;
+
+void setup() {
+    Serial.begin(9600);
+    Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+}
+
+void loop() {
+    Blynk.run();
+
+    if (Serial.available() > 0) {
+        red1 = Serial.read();
+        delay(100);
+
+        if (red1 == 'H') { // Level sensor
+            float sen1 = Serial.parseFloat();
+            Blynk.virtualWrite(V0, sen1);
+            delay(200);
+        }
+        if (red1 == 'S') { // Flow sensor
+            float sen2 = Serial.parseFloat();
+            Blynk.virtualWrite(V1, sen2);
+            delay(200);
+        }
+        if (red1 == 'T') { // Gas sensor
+            float sen3 = Serial.parseFloat();
+            Blynk.virtualWrite(V2, sen3);
+            delay(200);
+        }
+        if (red1 == 'P') { // Pressure sensor
+            float sen4 = Serial.parseFloat();
+            Blynk.virtualWrite(V3, sen4);
+            delay(200);
+        }
+    }
+}
